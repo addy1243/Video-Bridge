@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VideoBridge</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header><span class="mark" aria-hidden="true">↓</span><div><h1>VideoBridge</h1><p>Your videos. Saved locally.</p><p id="version"></p></div></header>
+  <main>
+    <aside id="reloadNotice" hidden role="alert">
+      <strong>Reload VideoBridge</strong>
+      <p id="reloadMessage" class="note"></p>
+      <button id="reload" type="button">Reload extension</button>
+    </aside>
+    <p class="sites">WEB VIDEO DOWNLOADER</p>
+    <form id="form">
+      <label for="url">Video or webpage link</label>
+      <input id="url" type="url" required placeholder="https://example.com/video">
+      <label class="session"><input id="useSession" type="checkbox"> Use this site's signed-in session</label>
+      <p id="sessionMessage" class="note" role="status">Off by default. If enabled, only cookies for this page are passed to the local helper in memory. They are not saved in history or a cookie file. DRM remains unsupported.</p>
+      <button id="find" class="secondary" type="button">Find videos on this page</button>
+      <button id="detect" class="secondary" type="button">Detect streaming video</button>
+      <p id="detection" class="note" role="status">For custom players, start playback before scanning. Detection watches only the tab where you enable it.</p>
+      <div id="sourceGroup" hidden><label for="source">Media or embedded player</label><select id="source"></select></div>
+      <button id="scan" class="secondary" type="button">Show available choices</button>
+      <p id="choicesMessage" class="note" role="status"></p>
+      <div id="videoGroup" hidden><label for="video">Video in this post</label><select id="video"></select></div>
+      <label for="quality">Quality</label>
+      <select id="quality"><option value="best">Best available</option><option value="1080">Prefer 1080p</option><option value="720">Prefer 720p</option></select>
+      <button id="download" type="submit">Download video <span aria-hidden="true">↓</span></button>
+    </form>
+    <section aria-label="Download status" aria-live="polite">
+      <strong id="status">Ready</strong>
+      <p id="message">Checking the current tab…</p>
+      <p id="metrics"></p>
+      <progress id="progress" max="100" hidden aria-label="Current media stream progress"></progress>
+      <p id="path" class="path"></p>
+      <button id="resume" class="secondary" type="button" hidden>Resume interrupted download</button>
+      <button id="clearHistory" class="secondary" type="button" title="Clear saved download status and resume details. Downloaded and partial files are kept.">Clear history</button>
+      <p class="note">Clears saved status and resume details. Keeps downloaded files.</p>
+    </section>
+    <button id="check" class="secondary" type="button">Check local helper</button>
+    <p id="helper" class="note" role="status"></p>
+    <details>
+      <summary>Setup &amp; updates</summary>
+      <p class="note">For first setup, double-click Setup.cmd in the VideoBridge folder. Your extension ID:</p>
+      <input id="extensionId" readonly aria-label="Extension ID">
+      <button id="copyId" type="button" class="secondary">Copy extension ID</button>
+      <button id="update" type="button" class="secondary">Update downloader now</button>
+      <p id="updater" class="note" role="status"></p>
+      <p class="note">Downloader updates run daily while the browser is open, when the helper is idle. Extension code updates still require Reload on the extensions page.</p>
+    </details>
+    <p class="note">Public videos and supported signed-in sessions. Detection may also find ads or previews; check your choice. DRM remains unsupported. Keep the browser open while downloading.</p>
+  </main>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

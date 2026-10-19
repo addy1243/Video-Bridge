@@ -1,0 +1,30 @@
+:root { color-scheme: dark; font: 14px/1.5 system-ui, sans-serif; color: #edf2ff; background: #111622; }
+* { box-sizing: border-box; }
+body { width: 380px; margin: 0; }
+header { display: flex; gap: 13px; align-items: center; padding: 24px 24px 18px; border-bottom: 1px solid #293044; }
+.mark { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: #c5f277; color: #17240b; font-size: 30px; }
+h1 { margin: 0; font-size: 22px; letter-spacing: -.6px; }
+p { margin: 5px 0; color: #abb6cd; }
+header p { font-size: 12px; }
+main { padding: 20px 24px; }
+.sites { margin: 0 0 18px; font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #c5f277; }
+label { display: block; margin: 14px 0 6px; font-size: 12px; }
+input, select { width: 100%; padding: 11px; background: #1b2232; color: inherit; border: 1px solid #3a4459; border-radius: 8px; font: inherit; }
+button { width: 100%; padding: 12px; margin-top: 18px; border: 0; border-radius: 8px; color: #142007; background: #c5f277; font: 650 14px system-ui; cursor: pointer; }
+button span { float: right; }
+button:disabled { opacity: .5; cursor: wait; }
+:focus-visible { outline: 2px solid #c5f277; outline-offset: 3px; }
+section { margin-top: 20px; padding: 14px; border-radius: 9px; background: #1b2232; }
+section p { font-size: 12px; overflow-wrap: anywhere; }
+progress { width: 100%; accent-color: #c5f277; margin-top: 8px; }
+.path { color: #c5f277; }
+.secondary { background: transparent; color: #c4cde0; border: 1px solid #3a4459; font-size: 12px; padding: 9px; margin-top: 12px; }
+.note { font-size: 11px; margin-top: 14px; }
+details { margin-top: 16px; }
+summary { cursor: pointer; font-size: 12px; color: #c5f277; }
+#extensionId { font-size: 11px; margin-top: 8px; }
+#metrics { font-variant-numeric: tabular-nums; color: #d4dfef; }
+#version { color: #c5f277; font-size: 10px; }
+#reloadNotice { border: 1px solid #c5f277; border-radius: 9px; padding: 14px; margin-bottom: 20px; }
+.session { display: flex; gap: 8px; align-items: center; }
+#useSession { width: auto; }

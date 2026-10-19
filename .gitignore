@@ -1,0 +1,17 @@
+.venv/
+.tmp/
+__pycache__/
+native/config.json
+native/host.cmd
+native/com.videobridge.downloader.json
+native/.operation.lock
+
+# Local release bundles and generated media fixtures
+VideoBridge-*-share.zip
+chunk-stream*.m4s
+init-stream*.m4s
+
+# Local credentials and environment settings
+.env
+.env.*
+!.env.example
