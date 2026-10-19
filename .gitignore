@@ -15,3 +15,6 @@ init-stream*.m4s
 .env
 .env.*
 !.env.example
+
+# Release build output (contains bundled third-party tools)
+dist/

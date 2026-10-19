@@ -1,4 +1,4 @@
-export const BUILD_VERSION = "0.4.0";
+export const BUILD_VERSION = "0.4.1";
 
 export function isCurrent(manifest, backgroundBuild) {
   return manifest.version === BUILD_VERSION && backgroundBuild === BUILD_VERSION &&

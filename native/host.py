@@ -147,7 +147,7 @@ def available_choices(info):
 
 
 def update_downloader(emit):
-    if Path(sys.prefix).resolve() != (ROOT.parent / ".venv").resolve():
+    if Path(sys.prefix).resolve() not in {(ROOT.parent / ".venv").resolve(), (ROOT.parent / "runtime/python").resolve()}:
         raise ValueError("Updates require VideoBridge's isolated Python environment. Run Setup.cmd.")
     emit({"status": "updating", "message": "Checking for downloader updates…"})
     result = subprocess.run(

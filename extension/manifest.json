@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "VideoBridge",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Find video streams on webpages and download supported public media using a local helper.",
   "minimum_chrome_version": "105",
   "permissions": ["activeTab", "nativeMessaging", "storage", "alarms", "scripting", "webRequest"],

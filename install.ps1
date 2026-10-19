@@ -27,19 +27,25 @@ if (-not $OutputDirectory -and (Test-Path -LiteralPath $configPath)) {
     $previousConfig = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
     $OutputDirectory = $previousConfig.output
 }
-$venvPython = Join-Path $projectRoot '.venv/Scripts/python.exe'
-$nodePath = (Get-Command node.exe -ErrorAction Stop).Source
+$bundledPython = Join-Path $projectRoot 'runtime/python/python.exe'
+$bundled = Test-Path -LiteralPath $bundledPython
+$venvPython = if ($bundled) { $bundledPython } else { Join-Path $projectRoot '.venv/Scripts/python.exe' }
+$nodePath = if ($bundled) { Join-Path $projectRoot 'runtime/node/node.exe' } else { (Get-Command node.exe -ErrorAction Stop).Source }
 $nodeVersion = & $nodePath --version
 if ([version]$nodeVersion.TrimStart('v') -lt [version]'22.0.0') { throw 'Install Node.js 22 or newer, then run setup again.' }
-$pythonPath = (Get-Command python.exe -ErrorAction Stop).Source
+$pythonPath = if ($bundled) { $bundledPython } else { (Get-Command python.exe -ErrorAction Stop).Source }
 & $pythonPath -c 'import sys; assert sys.version_info >= (3, 10), "Python 3.10+ required"'
 if ($LASTEXITCODE -ne 0) { throw 'Install Python 3.10 or newer.' }
 if (-not (Test-Path -LiteralPath $venvPython)) {
     & $pythonPath -m venv (Join-Path $projectRoot '.venv')
     if ($LASTEXITCODE -ne 0) { throw 'Could not create the local Python environment.' }
 }
-& $venvPython -m pip install --upgrade 'yt-dlp[default,curl-cffi]' imageio-ffmpeg
-if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed. Browser registration was not changed.' }
+if (-not $bundled) {
+    & $venvPython -m pip install --upgrade 'yt-dlp[default,curl-cffi]' imageio-ffmpeg
+    if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed. Browser registration was not changed.' }
+}
+& $venvPython -c 'import yt_dlp, curl_cffi, pip'
+if ($LASTEXITCODE -ne 0) { throw 'Downloader dependencies are missing. Reinstall VideoBridge.' }
 $ffmpegPath = & $venvPython -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())'
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $ffmpegPath)) { throw 'Could not find bundled FFmpeg.' }
 if (-not $OutputDirectory) {

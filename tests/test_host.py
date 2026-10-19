@@ -110,6 +110,12 @@ class HostTests(unittest.TestCase):
         self.assertEqual(messages[-1]["status"], "updated")
         self.assertEqual(run.call_args.args[0][-1], "yt-dlp[default,curl-cffi]")
         self.assertEqual(run.call_args.kwargs["timeout"], 180)
+        with patch.object(host.sys, "prefix", str(host.ROOT.parent / "runtime/python")), \
+                patch.object(host.subprocess, "run", return_value=SimpleNamespace(returncode=0)) as run, \
+                patch("importlib.metadata.version", return_value="bundled-version"):
+            host.update_downloader(messages.append)
+        self.assertEqual(messages[-1]["status"], "updated")
+        self.assertEqual(run.call_args.args[0][0], host.sys.executable)
 
     def test_error_messages_strip_terminal_codes_and_explain_403(self):
         self.assertEqual(host.clean_message("\x1b[0;31mERROR:\x1b[0m failed"), "ERROR: failed")

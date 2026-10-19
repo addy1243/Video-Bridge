@@ -2,11 +2,29 @@
 
 A Windows Chrome/Edge extension that sends video/page URLs to a local yt-dlp helper, with optional per-site sharing of your signed-in session. It supports yt-dlp's site extractors, generic webpage extraction, and direct media/manifests such as MP4, WebM, HLS and DASH where supported. The helper lists available video formats, downloads your selection, and joins separate audio/video tracks with FFmpeg. It runs locally without a hosted backend or automatic cookie export.
 
+## Windows installer (0.4.1)
+
+For friends, use [GitHub Releases](https://github.com/addy1243/Video-Bridge/releases/latest) and download the `VideoBridge-…-Setup-x64.exe` asset. The GitHub **Code > Download ZIP** option contains source code and requires the prerequisites documented below.
+
+The installer includes the extension, an isolated Python runtime, Node.js, FFmpeg, and downloader dependencies. It installs for the current Windows user under `%LOCALAPPDATA%\Programs\VideoBridge` without changing PATH or requiring administrator rights. Close browser windows and active downloads before installing/updating. The installer is currently unsigned; Windows may show an unknown-publisher warning. This installer targets Windows 10/11 x64.
+
+After installation, leave **Connect the extension to Chrome or Edge** checked. The connection window opens the installed extension folder. Open `chrome://extensions` or `edge://extensions`, turn on **Developer mode**, click **Load unpacked**, select that folder, and paste the extension ID into the connection window. Browser approval is required; the installer does not silently install extensions. Run **Connect VideoBridge to browser** from the Start menu again to connect another browser. Each browser uses its own extension ID and signed-in session.
+
+Bundled setup works without installing dependencies from the internet. Downloader updates still use PyPI and remain isolated to the bundled runtime; extension/runtime updates require a newer installer plus **Reload** in the extensions page. Existing helper settings are preserved when updating in the same install folder. Source-folder installations remain separate: install and connect the release once to switch to its helper. Downloaded files are kept outside the install folder. The initial installer has no uninstaller; remove the browser extension before manually removing the installation folder when no longer needed.
+
+Releases are built by `.github/workflows/release.yml` on Windows. A tag matching the manifest version (for example `v0.4.1`) runs the unit tests, builds/checks a relocatable runtime, runs the local media/resume/authentication fixture against that runtime, compiles the installer with Inno Setup, and publishes it with a SHA-256 checksum. Manual workflow runs create downloadable build artifacts without publishing a release. Build locally with Python 3.13 on Windows and Inno Setup 6 installed:
+
+```powershell
+python packaging/build_release.py --iscc 'C:/Program Files (x86)/Inno Setup 6/ISCC.exe'
+```
+
+The build downloads checksum-pinned official Python/Node archives and dependencies from PyPI; third-party runtime/package license files are retained in the bundle. Generated installers and build data are excluded from Git.
+
 ## Signed-in sites in 0.4.0
 
 For a registered-users/login-required error, first confirm the exact video plays in the same browser and profile where VideoBridge is installed. For the reported Hotstar case, use Edge:
 
-1. Wait for downloads to finish and Reload VideoBridge from `edge://extensions`. Confirm the popup says **v0.4.0**.
+1. Wait for downloads to finish and Reload VideoBridge from `edge://extensions`. Confirm the popup says **v0.4.1** for the current release.
 2. Open the signed-in Hotstar video tab. Enable **Use this site's signed-in session** and approve the optional cookie permission.
 3. Click **Show available choices**, then download a supported format. If a DRM error follows, session sharing cannot resolve it.
 

@@ -1,0 +1,53 @@
+name: Windows release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  installer:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          architecture: x64
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify release version
+        shell: pwsh
+        run: |
+          $version = (Get-Content extension/manifest.json | ConvertFrom-Json).version
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") {
+            throw 'Release tag must match the extension manifest version.'
+          }
+      - name: Unit tests
+        run: npm test
+      - name: Install installer compiler
+        run: choco install innosetup --no-progress -y
+      - name: Build and test bundled installer
+        run: python packaging/build_release.py --iscc "C:/Program Files (x86)/Inno Setup 6/ISCC.exe"
+      - name: Test installation without system prerequisites
+        shell: pwsh
+        run: ./tests/smoke_installer.ps1 -Installer (Get-ChildItem dist/*.exe).FullName
+      - name: Save build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: VideoBridge-Windows-x64
+          path: dist/*
+          if-no-files-found: error
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          gh release create "$env:GITHUB_REF_NAME" dist/*.exe dist/SHA256SUMS.txt --verify-tag --title "VideoBridge $env:GITHUB_REF_NAME" --notes-file packaging/RELEASE-NOTES.md
