@@ -41,4 +41,3 @@ Name: "{group}\VideoBridge extension folder"; Filename: "{app}\extension"
 
 [Run]
 Filename: "{app}\Connect-browser.cmd"; Description: "Connect the extension to Chrome or Edge"; Flags: postinstall shellexec skipifsilent
-

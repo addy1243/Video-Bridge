@@ -229,7 +229,7 @@ def session_cookies(raw_cookies, cookie_url):
     return result
 
 
-def error_message(error):
+def error_message(error, secrets=()):
     message = clean_message(error)
     if "only available for registered users" in message or "login required" in message.lower():
         return "This site requires a signed-in session. Open the video in the browser where it plays, enable Use this site's signed-in session, and retry. If sharing is already enabled, the session may be expired or unsupported by this site's extractor. Login access does not remove DRM protection."
@@ -239,7 +239,9 @@ def error_message(error):
         return "Browser-compatible networking is missing. Open Setup & updates > Update downloader now, then retry."
     if "403" in message:
         return "The website refused the downloader (HTTP 403). Start the video in your browser, enable Detect streaming video, then select a detected media link. The site may still require browser-only verification or login."
-    return message[:6000]
+    if "unsupported url" in message.lower():
+        return "The downloader could not extract video from this page or embedded player. Start playback in the browser, click Find videos on this page, or enable Detect streaming video and select a detected stream. Some players remain unsupported."
+    return redact(message, secrets)[:6000]
 
 
 def run_extraction(options, operation, emit, cookies=()):
@@ -383,7 +385,7 @@ def main():
     except (BrokenPipeError, EOFError):
         return
     except Exception as error:
-        emit({"status": "error", "message": redact(error_message(error), secrets), "percent": None})
+        emit({"status": "error", "message": error_message(error, secrets), "percent": None})
 
 
 if __name__ == "__main__":

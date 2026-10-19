@@ -128,6 +128,14 @@ class HostTests(unittest.TestCase):
         self.assertNotIn("--cookies-from-browser", message)
         self.assertIn("cannot export", host.error_message("This video is DRM protected"))
 
+    def test_friendly_errors_remain_readable_and_raw_errors_redact_cookies(self):
+        drm = host.error_message("This video is DRM protected", ["in", "ordinary"])
+        self.assertIn("ordinary playable file", drm)
+        self.assertIn("signed-in session", drm)
+        self.assertNotIn("[redacted]", drm)
+        self.assertEqual(host.error_message("raw fake-token in", ["fake-token", "in"]), "raw [redacted] [redacted]")
+        self.assertIn("Detect streaming video", host.error_message("ERROR: Unsupported URL: https://example.com/embed"))
+
     def test_cookie_scope_secure_flag_and_host_only_behavior(self):
         raw = {"name": "session", "value": "fake-test-token", "domain": "example.com", "path": "/", "hostOnly": True, "secure": True}
         cookies = host.session_cookies([raw], "https://example.com/watch")
